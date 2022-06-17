@@ -14,25 +14,25 @@ class DashPage extends StatefulWidget {
 class _DashPageState extends State<DashPage> {
   final List productType = [
     [
-      'Cappucino',
+      'Cooking',
       true,
     ],
     [
-      'latte',
+      'Crypto',
       false,
     ],
     [
-      'Black',
+      'Stonks',
       false,
     ],
     [
-      'tea',
+      'Tech',
       false,
     ],
   ];
   final List<Product> productlst = [
     Product(
-      productImagePath: 'assets/bg.png',
+      productImagePath: 'assets/profile.png',
       productName: 'Latte',
       productPrice: '\$4.00',
       productinfo: '\$4.00',
@@ -62,7 +62,7 @@ class _DashPageState extends State<DashPage> {
       productinfo: '\$4.00',
     ),
     Product(
-      productImagePath: 'assets/images/icon.png',
+      productImagePath: 'assets/icon.png',
       productName: 'Latte',
       productPrice: '\$4.00',
       productinfo: '\$4.00',
@@ -117,7 +117,7 @@ class _DashPageState extends State<DashPage> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
             child: Text(
-              'Find the best cofFee for you ',
+              'Find the best Blogs for you ',
               style: GoogleFonts.bebasNeue(
                 fontSize: 46,
               ),
@@ -133,7 +133,7 @@ class _DashPageState extends State<DashPage> {
                 filled: true,
                 fillColor: const Color(0xFF141921),
                 prefixIcon: const Icon(Icons.search),
-                hintText: 'Find your Cofee',
+                hintText: 'Find best blogs',
                 focusedBorder: OutlineInputBorder(
                   // borderSide: BorderSide(color: Colors.grey.shade600),
                   borderRadius: BorderRadius.circular(15),

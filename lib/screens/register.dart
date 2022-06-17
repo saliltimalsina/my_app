@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:my_app/models/UserModel.dart';
+import 'package:motion_toast/motion_toast.dart';
+import 'package:my_app/repository/userRepository.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -8,6 +11,33 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _countryController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
+  _displayMessage(msg) {
+    if (msg) {
+      MotionToast.success(description: const Text("success register"))
+          .show(context);
+    } else {
+      MotionToast.warning(description: const Text('error rergister'))
+          .show(context);
+    }
+  }
+
+  _registerUser(User user) async {
+    bool isLogin = await UserRepository().registerUser(user);
+    if (isLogin) {
+      _displayMessage(true);
+    } else {
+      _displayMessage(false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -40,6 +70,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: 42,
                 ),
                 TextFormField(
+                  controller: _usernameController,
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
@@ -77,6 +108,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: 10,
                 ),
                 TextFormField(
+                  controller: _addressController,
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
@@ -114,6 +146,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: 10,
                 ),
                 TextFormField(
+                  controller: _emailController,
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
@@ -151,6 +184,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: 10,
                 ),
                 TextFormField(
+                  controller: _passwordController,
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
@@ -193,7 +227,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   width: double.infinity,
                   child: RaisedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/dashboard');
+                      if (_formKey.currentState!.validate()) {
+                        User user = User(
+                          email: _emailController.text,
+                          address: _addressController.text,
+                          username: _usernameController.text,
+                          password: _passwordController.text,
+                        );
+                        _registerUser(user);
+                      }
                     },
                     child: Text(
                       "Sign Up",
