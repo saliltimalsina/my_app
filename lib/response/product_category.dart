@@ -1,11 +1,10 @@
+import '../models/category.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:my_app/screens/util/categories.dart';
+part 'product_category.g.dart';
 
-import 'category.dart';
-part 'product.g.dart';
-
+//flutter pub run build_runner build
 @JsonSerializable()
-class Product {
+class ProductCategory {
   @JsonKey(name: '_id')
   String? id;
   String? name;
@@ -13,30 +12,29 @@ class Product {
   String? richDescription;
   String? image;
   String? brand;
-  double? price;
-  String? category;
+  int? price;
   int? countInStock;
   int? rating;
   int? numReviews;
   bool? isFeatured;
+  Category? category;
 
-  Product({
+  ProductCategory({
     this.name,
     this.description,
     this.richDescription,
     this.image,
     this.brand,
     this.price,
-    this.category,
     this.countInStock,
     this.rating,
     this.numReviews,
     this.isFeatured,
+    this.category,
   });
 
-  factory Product.fromJson(Map<String, dynamic> json) {
-    return _$ProductFromJson(json);
-  }
+  factory ProductCategory.fromJson(Map<String, dynamic> json) =>
+      _$ProductCategoryFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ProductToJson(this);
+  Map<String, dynamic> toJson() => _$ProductCategoryToJson(this);
 }

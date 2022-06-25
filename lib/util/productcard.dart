@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/utils/url.dart';
 
 class ProductCard extends StatelessWidget {
   final String productImagePath;
@@ -33,7 +34,7 @@ class ProductCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
+            child: Image.network(
               productImagePath,
               height: 150,
               width: double.infinity,

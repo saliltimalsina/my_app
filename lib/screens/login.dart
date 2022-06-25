@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:motion_toast/motion_toast.dart';
+
+import '../models/UserModel.dart';
+import '../repository/userRepository.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -7,7 +11,34 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _formkey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  _navigateToScreen(bool isLogin) {
+    if (isLogin) {
+      Navigator.pushReplacementNamed(context, '/homepage');
+    } else {
+      MotionToast.error(description: const Text('Enter user or passowrd'))
+          .show(context);
+    }
+  }
+
+  _login(User user) async {
+    try {
+      UserRepository userRepository = UserRepository();
+      bool isLogin = await userRepository.loginUser(user);
+      if (isLogin) {
+        _navigateToScreen(true);
+      } else {
+        _navigateToScreen(false);
+        MotionToast.warning(description: Text('error')).show(context);
+      }
+    } catch (e) {
+      _navigateToScreen(false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -20,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
         body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Form(
-            key: _formkey,
+            key: _formKey,
             child: Stack(
               children: <Widget>[
                 Center(
@@ -72,6 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: 39,
                     ),
                     TextFormField(
+                      controller: _emailController,
                       style: GoogleFonts.montserrat(
                         fontSize: 13.59,
                         color: const Color(0xffe0e0e0),
@@ -113,6 +145,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: 15,
                     ),
                     TextFormField(
+                      controller: _passwordController,
                       obscureText: true,
                       style: GoogleFonts.montserrat(
                         fontSize: 13.59,
@@ -159,7 +192,16 @@ class _LoginPageState extends State<LoginPage> {
                       width: double.infinity,
                       child: RaisedButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, "/homepage");
+                          // if (_formKey.currentState!.validate()) {
+                          //   User user = User(
+                          //     email: _emailController.text,
+                          //     password: _passwordController.text,
+                          //   );
+
+                          //   _login(user);
+                          // }
+
+                          Navigator.pushNamed(context, '/homepage');
                         },
                         child: Text(
                           "SIGN IN",

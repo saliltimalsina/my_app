@@ -31,12 +31,10 @@ class UserAPI {
     var url = baseUrl + loginUrl;
     var dio = HttpServices().getDioInstance();
     try {
-      response = await dio.post(
-        url,
-        data: user.toJson(),
-      );
+      response = await dio
+          .post(url, data: {"email": user.email, "password": user.password});
       if (response.statusCode == 200) {
-        return true;
+        isLogin = true;
       }
     } catch (e) {
       debugPrint(e.toString());

@@ -3,6 +3,9 @@ import 'package:my_app/screens/util/categories.dart';
 import 'package:my_app/screens/util/productcard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../response/get_product_response.dart';
+import '../response/product_category.dart';
+import '../repository/product_repositories.dart';
 
 class DashPage extends StatefulWidget {
   const DashPage({Key? key}) : super(key: key);
@@ -30,44 +33,7 @@ class _DashPageState extends State<DashPage> {
       false,
     ],
   ];
-  final List<Product> productlst = [
-    Product(
-      productImagePath: 'assets/profile.png',
-      productName: 'Latte',
-      productPrice: '\$4.00',
-      productinfo: '\$4.00',
-    ),
-    Product(
-      productImagePath: 'assets/logo.png',
-      productName: 'Latte',
-      productPrice: '\$4.00',
-      productinfo: '\$4.00',
-    ),
-    Product(
-      productImagePath: 'assets/icon.png',
-      productName: 'Latte',
-      productPrice: '\$4.00',
-      productinfo: '\$4.00',
-    ),
-    Product(
-      productImagePath: 'assets/icon.png',
-      productName: 'Latte',
-      productPrice: '\$4.00',
-      productinfo: '\$4.00',
-    ),
-    Product(
-      productImagePath: 'asset/icon.png',
-      productName: 'Latte',
-      productPrice: '\$4.00',
-      productinfo: '\$4.00',
-    ),
-    Product(
-      productImagePath: 'assets/icon.png',
-      productName: 'Latte',
-      productPrice: '\$4.00',
-      productinfo: '\$4.00',
-    ),
-  ];
+
   void CategorySelected(int index) {
     setState(() {
       for (int i = 0; i < productType.length; i++) {
@@ -114,15 +80,15 @@ class _DashPageState extends State<DashPage> {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Text(
-              'Find the best Blogs for you ',
-              style: GoogleFonts.bebasNeue(
-                fontSize: 46,
-              ),
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          //   child: Text(
+          //     'Find the best Blogs for you ',
+          //     style: GoogleFonts.bebasNeue(
+          //       fontSize: 46,
+          //     ),
+          //   ),
+          // ),
           const SizedBox(
             height: 25,
           ),
@@ -185,24 +151,69 @@ class _DashPageState extends State<DashPage> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 5.0,
-                  mainAxisSpacing: 5.0,
-                  childAspectRatio: MediaQuery.of(context).size.width /
-                      (MediaQuery.of(context).size.height) /
-                      0.73,
-                ),
-                itemCount: productlst.length,
-                itemBuilder: ((context, index) {
-                  return ProductCard(
-                    productImagePath: productlst[index].productImagePath!,
-                    productName: productlst[index].productName!,
-                    productPrice: productlst[index].productPrice!,
-                  );
-                }),
+              child: FutureBuilder<ProductResponse?>(
+                future: ProductRepository().getProducts(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasData) {
+                      // ProductResponse productResponse = snapshot.data!;
+                      List<ProductCategory> productlst = snapshot.data!.data!;
+                      print("Image");
+                      print(productlst[0].image);
+                      return GridView.builder(
+                        itemCount: snapshot.data!.data!.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 5.0,
+                          mainAxisSpacing: 5.0,
+                          childAspectRatio: MediaQuery.of(context).size.width /
+                              (MediaQuery.of(context).size.height) /
+                              0.83,
+                        ),
+                        itemBuilder: ((context, index) {
+                          // print();
+                          return ProductCard(
+                            productImagePath: productlst[index].image!,
+                            productName: productlst[index].name!,
+                            productPrice: productlst[index].price!,
+                            productDescription: productlst[index].description!,
+                          );
+                        }),
+                      );
+                    } else {
+                      return const Center(
+                        child: Text('No data'),
+                      );
+                    }
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    return const Text('Error retrieving data');
+                  }
+                },
               ),
+
+              //  GridView.builder(
+              //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              //     crossAxisCount: 2,
+              //     crossAxisSpacing: 5.0,
+              //     mainAxisSpacing: 5.0,
+              //     childAspectRatio: MediaQuery.of(context).size.width /
+              //         (MediaQuery.of(context).size.height) /
+              //         0.73,
+              //   ),
+              //   itemCount: productlst.length,
+              //   itemBuilder: ((context, index) {
+              //     return ProductCard(
+              //       productImagePath: productlst[index].productImagePath!,
+              //       productName: productlst[index].productName!,
+              //       productPrice: productlst[index].productPrice!,
+              //     );
+              //   }),
+              // ),
             ),
           )
         ],

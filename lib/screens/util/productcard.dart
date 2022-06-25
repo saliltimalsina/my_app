@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/utils/url.dart';
 
 class ProductCard extends StatelessWidget {
   final String productImagePath;
   final String productName;
-
-  final String productPrice;
+  final String productDescription;
+  final int productPrice;
 
   ProductCard(
       {required this.productImagePath,
       required this.productName,
+      required this.productDescription,
       required this.productPrice});
 
   @override
@@ -33,8 +35,8 @@ class ProductCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              productImagePath,
+            child: Image.network(
+              '${productImagePath.replaceAll('localhost', '10.0.2.2')}',
               height: 150,
               width: double.infinity,
               fit: BoxFit.cover,
@@ -53,7 +55,7 @@ class ProductCard extends StatelessWidget {
                   height: 4,
                 ),
                 Text(
-                  'With Almond Milk',
+                  productDescription,
                   style: TextStyle(
                     color: Colors.grey[700],
                   ),
@@ -66,7 +68,7 @@ class ProductCard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(productPrice),
+                Text('$productPrice'),
                 Container(
                   padding: EdgeInsets.all(4),
                   decoration: BoxDecoration(

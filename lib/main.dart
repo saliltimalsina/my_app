@@ -1,11 +1,25 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:my_app/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/screens/login.dart';
 import 'package:my_app/screens/register.dart';
 import 'package:my_app/screens/dashboard.dart';
 import 'package:my_app/screens/homepage.dart';
+import 'package:my_app/screens/wearlogin.dart';
 
 void main() {
+  AwesomeNotifications().initialize('resource://drawable/launcher', [
+    NotificationChannel(
+      channelGroupKey: 'basic',
+      channelKey: 'basic',
+      channelName: 'Basic',
+      channelDescription: 'Basic notification',
+      defaultColor: const Color(0xFF00FF00),
+      importance: NotificationImportance.Max,
+      ledColor: Colors.white,
+      channelShowBadge: true,
+    )
+  ]);
   runApp(const MyApp());
 }
 
@@ -23,6 +37,7 @@ class MyApp extends StatelessWidget {
         "/register": (context) => RegisterScreen(),
         "/dashboard": (context) => const NavigationDrawer(),
         "/homepage": (context) => const DashPage(),
+        "/wearlogin": (context) => const Wearos(),
       },
       title: 'Flutter Demo',
       theme: ThemeData(
